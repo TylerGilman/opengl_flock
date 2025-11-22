@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your SaaS - Intelligent Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            overflow-x: hidden;
+            background: #fdfaf0;
+        }
+
+        /* Full-screen background canvas */
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background: #fdfaf0;
+        }
+
+        /* Content layer sits above canvas */
+        .content-layer {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* Bold colored headline - no background */
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        /* Subheadline with semi-transparent background */
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: #2a2a2a;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 3rem;
+            border-radius: 12px;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            font-weight: 300;
+            line-height: 1.6;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* CTA Buttons */
+        .cta-container {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: #2a2a2a;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            color: #1a1a1a;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: #1a1a1a;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 0, 0, 0.25);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: rgba(0, 0, 0, 0.7);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .footer-cta h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-cta p {
+            font-size: 1.2rem;
+            color: rgba(0, 0, 0, 0.7);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-subtitle {
+                padding: 1rem 1.5rem;
+            }
+
+            .cta-container {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading indicator */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            color: #1a1a1a;
+            font-size: 1.2rem;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Full-screen background canvas -->
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <!-- Loading indicator -->
+    <div class="loading" id="loading">Loading experience...</div>
+
+    <!-- Content layer -->
+    <div class="content-layer">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Build Faster.<br>Scale Smarter.</h1>
+            <div class="hero-subtitle">
+                Transform your workflow with intelligent automation that adapts to your team's needs. Deploy in minutes, not months.
+            </div>
+            <div class="cta-container">
+                <a href="#" class="btn btn-primary">Start Free Trial</a>
+                <a href="#" class="btn btn-secondary">Watch Demo</a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <h2>Why Teams Choose Us</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Built with performance in mind. WebAssembly-powered core ensures millisecond response times, even at scale.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-grade encryption and compliance with SOC2, GDPR, and HIPAA. Your data stays yours.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Deploy Anywhere</h3>
+                    <p>Cloud, on-premise, or hybrid. Our platform adapts to your infrastructure requirements.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer CTA -->
+        <section class="footer-cta">
+            <h2>Ready to Get Started?</h2>
+            <p>Join thousands of teams already building with us</p>
+            <div class="cta-container">
+                <a href="#" class="btn btn-primary">Create Account</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Performance monitoring and canvas resizing -->
+    <script>
+        // Handle canvas resizing
+        const canvas = document.getElementById('canvas');
+        const loading = document.getElementById('loading');
+        let wasmReady = false;
+
+        // Set initial canvas size before WASM loads
+        function setCanvasSize() {
+            const dpr = window.devicePixelRatio || 1;
+            const displayWidth = window.innerWidth;
+            const displayHeight = window.innerHeight;
+
+            canvas.width = displayWidth * dpr;
+            canvas.height = displayHeight * dpr;
+            canvas.style.width = displayWidth + 'px';
+            canvas.style.height = displayHeight + 'px';
+        }
+
+        function resizeCanvas() {
+            setCanvasSize();
+
+            // Only call WASM resize if it's ready and the function exists
+            if (wasmReady && typeof Module !== 'undefined' && Module._resize_canvas) {
+                Module._resize_canvas(canvas.width, canvas.height);
+            }
+        }
+
+        // Set initial size immediately
+        setCanvasSize();
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // Configure Module before loading WASM
+        window.Module = {
+            onRuntimeInitialized: function() {
+                wasmReady = true;
+                loading.classList.add('hidden');
+            }
+        };
+
+        // Pause animation when page is not visible (performance optimization)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && wasmReady) {
+                // Pause the main loop
+                if (Module.pauseMainLoop) {
+                    Module.pauseMainLoop();
+                }
+            } else if (!document.hidden && wasmReady) {
+                // Resume the main loop
+                if (Module.resumeMainLoop) {
+                    Module.resumeMainLoop();
+                }
+            }
+        });
+
+        // Reduce particle count on mobile for better performance
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+            console.log('Mobile detected - optimizing particle count');
+            // This will be used by the WASM module
+            window.PARTICLE_COUNT = 200; // Reduced from 500
+        }
+    </script>
+
+    <!-- Load the WebAssembly flocking simulation -->
+    <script src="flock_wasm.js"></script>
+</body>
+</html>
